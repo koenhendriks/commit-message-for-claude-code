@@ -1,12 +1,13 @@
 package nl.koenhendriks.claudecommit.cli
 
 import com.intellij.execution.configurations.GeneralCommandLine
-import com.intellij.execution.configurations.PathEnvironmentVariableUtil
 import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.progress.ProcessCanceledException
 import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.util.SystemInfo
+import com.intellij.util.EnvironmentUtil
 import com.intellij.util.concurrency.AppExecutorUtil
 import nl.koenhendriks.claudecommit.ClaudeCommitBundle
 import nl.koenhendriks.claudecommit.settings.EffectiveSettings
@@ -24,7 +25,12 @@ object ClaudeCli {
     const val CLI_DEFAULT_MODEL = "default"
 
     fun detect(): String? {
-        PathEnvironmentVariableUtil.findExecutableInPathOnAnyOS("claude")?.let { return it.absolutePath }
+        val names = if (SystemInfo.isWindows) listOf("claude.exe", "claude.cmd") else listOf("claude")
+        EnvironmentUtil.getValue("PATH").orEmpty()
+            .split(File.pathSeparatorChar)
+            .filter { it.isNotBlank() }
+            .firstNotNullOfOrNull { dir -> names.map { File(dir, it) }.firstOrNull { it.isFile && it.canExecute() } }
+            ?.let { return it.absolutePath }
 
         // IDEs started from a desktop launcher often lack the PATH entries that shell rc files add.
         val home = System.getProperty("user.home")
