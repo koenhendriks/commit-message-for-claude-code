@@ -1,0 +1,37 @@
+<idea-plugin>
+    <id>nl.koenhendriks.claudecommit</id>
+    <name>Commit Message for Claude Code</name>
+    <vendor email="info@koenhendriks.nl" url="https://koenhendriks.nl">Koen Hendriks</vendor>
+
+    <!-- description and change-notes are filled in by patchPluginXml from README.md and CHANGELOG.md -->
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.vcs</depends>
+    <dependencies>
+        <module name="intellij.platform.vcs.impl"/>
+    </dependencies>
+
+    <resource-bundle>messages.ClaudeCommitBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable
+                parentId="tools"
+                id="nl.koenhendriks.claudecommit.settings"
+                instance="nl.koenhendriks.claudecommit.settings.ClaudeCommitConfigurable"
+                key="settings.displayName"/>
+        <projectConfigurable
+                parentId="nl.koenhendriks.claudecommit.settings"
+                id="nl.koenhendriks.claudecommit.settings.project"
+                instance="nl.koenhendriks.claudecommit.settings.ClaudeCommitProjectConfigurable"
+                key="settings.project.displayName"/>
+        <notificationGroup id="Commit Message for Claude Code" displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <action id="ClaudeCommit.Generate"
+                class="nl.koenhendriks.claudecommit.GenerateCommitMessageAction"
+                icon="/icons/generate.svg">
+            <add-to-group group-id="Vcs.MessageActionGroup" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
