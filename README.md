@@ -23,6 +23,18 @@ The diff of the selected changes is sent to Anthropic through your Claude Code C
 This is an independent plugin. It is not made, endorsed or supported by Anthropic. Claude and Claude Code are trademarks of Anthropic, PBC.
 <!-- Plugin description end -->
 
+## Screenshots
+
+The button sits next to the commit message history icon. Only the checked files and lines are sent, so here the unrelated `Product.php` and the not yet included `DiscountCode.php` are left out:
+
+![Generate button in the commit message toolbar](docs/screenshots/commit-button.png)
+
+![Generated conventional commit message](docs/screenshots/generated-message.png)
+
+The model list comes straight from the Claude Code CLI:
+
+![Settings page with the model dropdown](docs/screenshots/settings.png)
+
 ## Settings
 
 **Settings | Tools | Commit Message for Claude Code**
@@ -58,23 +70,6 @@ Enabling **Use the project's Claude Code context** drops the first three points:
 ```
 
 Install `build/distributions/commit-message-for-claude-code-*.zip` with **Settings | Plugins | ⚙ | Install Plugin from Disk…**.
-
-## Releasing
-
-Releases go through GitHub Actions. `Build` runs the tests, builds the plugin and runs the Plugin Verifier on every push to `main` and every pull request. `Release` signs and publishes when a GitHub release is published.
-
-One-time setup:
-
-1. Create a signing key and certificate chain ([plugin signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html)) and a Marketplace token ([personal access token](https://plugins.jetbrains.com/author/me/tokens)).
-2. Add them as repository secrets: `CERTIFICATE_CHAIN`, `PRIVATE_KEY`, `PRIVATE_KEY_PASSWORD`, `PUBLISH_TOKEN`.
-
-For each release:
-
-1. Move the `[Unreleased]` notes in `CHANGELOG.md` under a new version heading (they become the Marketplace change notes) and bump `pluginVersion` in `gradle.properties`. A suffix such as `1.1.0-beta.1` publishes to the `beta` channel.
-2. Push to `main`, then publish a GitHub release with tag `v<pluginVersion>`, e.g. `v1.0.0`. The workflow refuses to run when the tag and `pluginVersion` differ.
-3. The workflow attaches the signed zip to the GitHub release and uploads it to the Marketplace.
-
-The Marketplace only accepts the very first version as a manual upload, so the publish step of the first release fails. Upload the signed zip attached to that GitHub release on [plugins.jetbrains.com](https://plugins.jetbrains.com/plugin/add) instead; later releases publish automatically.
 
 ## License
 
